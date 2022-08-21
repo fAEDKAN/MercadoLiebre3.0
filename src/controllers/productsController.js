@@ -1,8 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-
-const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
-const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
+const {loadProducts} = require('../data/dbModule')
 
 const toThousand = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
@@ -10,11 +6,22 @@ const controller = {
 	// Root - Show all products
 	index: (req, res) => {
 		// Do the magic
+		let products = loadProducts();
+		return res.render('products', {
+			products,
+			toThousand
+		});
 	},
 
 	// Detail - Detail from one product
 	detail: (req, res) => {
 		// Do the magic
+		let products = loadProducts();
+		let product = products.find(product => product.id === +req.params.id)
+		return res.render('detail', {
+			product,
+			toThousand
+		})
 	},
 
 	// Create - Form to create

@@ -1,10 +1,16 @@
 // ************ Require's ************
+require('dotenv').config();
 const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const logger = require('morgan');
 const path = require('path');
-const methodOverride =  require('method-override'); // Pasar poder usar los métodos PUT y DELETE
+
+const methodOverride =  require('method-override'); // Permite usar los métodos PUT y DELETE
+const session = require('express-session');
+
+const cookieCheck = require('./middlewares/cookieCheck');
+const localsUserCheck = require('./middlewares/localsUserCheck');
 
 // ************ express() - (don't touch) ************
 const app = express();
@@ -15,7 +21,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(methodOverride('_method')); // Pasar poder pisar el method="POST" en el formulario por PUT y DELETE
+app.use(session({
+  secret : 'MLUser',
+  resave : true,
+  saveUninitialized : false
+}));
+
+app.use(cookieCheck);
+app.use(localsUserCheck);
 
 // ************ Template Engine - (don't touch) ************
 app.set('view engine', 'ejs');
@@ -27,9 +42,11 @@ app.set('views', path.join(__dirname, '/views')); // Define la ubicación de la 
 // ************ Route System require and use() ************
 const mainRouter = require('./routes/main'); // Rutas main
 const productsRouter = require('./routes/products'); // Rutas /products
+const usersRouter = require('./routes/users'); // Rutas /users
 
 app.use('/', mainRouter);
 app.use('/products', productsRouter);
+app.use('/users', usersRouter);
 
 
 

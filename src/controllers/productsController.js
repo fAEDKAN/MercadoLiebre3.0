@@ -1,4 +1,6 @@
-const {loadProducts, storeProducts} = require('../data/dbModule');
+const db = require('../database/models')
+
+const { loadProducts, storeProducts } = require('../data/dbModule');
 
 const toThousand = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
@@ -6,11 +8,17 @@ const controller = {
 	// Root - Show all products
 	index: (req, res) => {
 		// Do the magic
-		let products = loadProducts();
+		db.Product.findAll()
+			.then(products => res.render('products', {
+				products,
+				toThousand
+			}))
+			.catch(error => console.log(error))
+		/* let products = loadProducts();
 		return res.render('products', {
 			products,
 			toThousand
-		});
+		}) */
 	},
 
 	// Detail - Detail from one product

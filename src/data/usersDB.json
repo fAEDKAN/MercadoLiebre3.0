@@ -1,0 +1,11 @@
+[
+   {
+      "id": 1,
+      "firstName": "mercado",
+      "lastName": "liebre",
+      "email": "user@user.com",
+      "password": "$2a$10$lb5FYQWtXaz8Mq6tYIE98exCi19HBRHrqaFWSxYZzCIc8Ie.5UYXO",
+      "password2": null,
+      "avatar": null
+   }
+]
